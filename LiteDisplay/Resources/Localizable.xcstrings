@@ -1,0 +1,1466 @@
+{
+  "sourceLanguage": "pt-BR",
+  "strings": {
+    "%@ @ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ @ %2$@"
+          }
+        }
+      }
+    },
+    "%@ HiDPI @ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ HiDPI @ %2$@"
+          }
+        }
+      }
+    },
+    "%@ px": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ px"
+          }
+        }
+      }
+    },
+    "%@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%lld modos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld modes"
+          }
+        }
+      }
+    },
+    "%lld modos utilizáveis reportados pelo macOS.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld usable modes reported by macOS."
+          }
+        }
+      }
+    },
+    "%lld″": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld″"
+          }
+        }
+      }
+    },
+    "A instalação do perfil falhou: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installing the profile failed: %@"
+          }
+        }
+      }
+    },
+    "A instalação foi cancelada.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The installation was cancelled."
+          }
+        }
+      }
+    },
+    "A resolução está sendo controlada pela tela virtual.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The resolution is controlled by the virtual display."
+          }
+        }
+      }
+    },
+    "A tela virtual continua ativa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The virtual display is still active."
+          }
+        }
+      }
+    },
+    "Abrir LiteDisplay…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open LiteDisplay…"
+          }
+        }
+      }
+    },
+    "Ajustes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Algo deu errado.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something went wrong."
+          }
+        }
+      }
+    },
+    "Ao conectar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On connect"
+          }
+        }
+      }
+    },
+    "Aplicando…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Applying…"
+          }
+        }
+      }
+    },
+    "Aplicar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply"
+          }
+        }
+      }
+    },
+    "Aplicar ao conectar o monitor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply when the display connects"
+          }
+        }
+      }
+    },
+    "Aprovar em Ajustes do Sistema…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Approve in System Settings…"
+          }
+        }
+      }
+    },
+    "Ative o LiteDisplay em Ajustes do Sistema › Geral › Itens de Login.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable LiteDisplay in System Settings › General › Login Items."
+          }
+        }
+      }
+    },
+    "Atual": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current"
+          }
+        }
+      }
+    },
+    "Cancelar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Clique de novo e informe a senha de administrador.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click again and enter the administrator password."
+          }
+        }
+      }
+    },
+    "Como o macOS desenha neste monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How macOS renders on this display."
+          }
+        }
+      }
+    },
+    "Conecte um monitor para escolher a nitidez, a resolução e a taxa de atualização.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect a display to choose sharpness, resolution and refresh rate."
+          }
+        }
+      }
+    },
+    "Configure o monitor do jeito que gosta e salve como perfil.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set the display up the way you like and save it as a profile."
+          }
+        }
+      }
+    },
+    "Cor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color"
+          }
+        }
+      }
+    },
+    "Cria uma tela virtual 2x e espelha o monitor nela: redução exata 2:1, o texto mais nítido possível.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creates a 2x virtual display and mirrors the monitor onto it: exact 2:1 downscale, the sharpest text possible."
+          }
+        }
+      }
+    },
+    "Criar perfil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create profile"
+          }
+        }
+      }
+    },
+    "Desenha em 2x e reduz para o painel usando um modo HiDPI do próprio monitor. Mantém a taxa de atualização.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renders at 2x and scales down to the panel using one of the display’s own HiDPI modes. Keeps the refresh rate."
+          }
+        }
+      }
+    },
+    "Desligue a tela virtual para escolher outra resolução.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn the virtual display off to pick another resolution."
+          }
+        }
+      }
+    },
+    "Disponível para o tamanho atual.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available for the current size."
+          }
+        }
+      }
+    },
+    "Editar perfil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit profile"
+          }
+        }
+      }
+    },
+    "Editar…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit…"
+          }
+        }
+      }
+    },
+    "Engrossa levemente o texto em monitores sem HiDPI. Vale para apps abertos a partir de agora.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slightly thickens text on non-HiDPI displays. Applies to apps opened from now on."
+          }
+        }
+      }
+    },
+    "Enorme": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Huge"
+          }
+        }
+      }
+    },
+    "Escala": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scale"
+          }
+        }
+      }
+    },
+    "Escolha outro tamanho ou taxa de atualização.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose another size or refresh rate."
+          }
+        }
+      }
+    },
+    "Esse modo não está disponível neste monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That mode is not available on this display."
+          }
+        }
+      }
+    },
+    "Esta versão do macOS não permite criar telas virtuais.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This version of macOS does not allow creating virtual displays."
+          }
+        }
+      }
+    },
+    "Este monitor não oferece modos HiDPI.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This display offers no HiDPI modes."
+          }
+        }
+      }
+    },
+    "Este monitor não pode receber um perfil HiDPI.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This display cannot receive a HiDPI profile."
+          }
+        }
+      }
+    },
+    "Ex.: Trabalho, Jogos, Filmes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E.g. Work, Games, Movies"
+          }
+        }
+      }
+    },
+    "Excluir": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Fechar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Filtrar modos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filter modes"
+          }
+        }
+      }
+    },
+    "Guarde combinações de nitidez, tamanho e taxa e aplique com um clique, aqui ou pelo menu.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save combinations of sharpness, size and rate and apply them in one click, here or from the menu."
+          }
+        }
+      }
+    },
+    "Habilitar HiDPI neste monitor…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable HiDPI on this display…"
+          }
+        }
+      }
+    },
+    "HiDPI indisponível neste monitor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HiDPI unavailable on this display"
+          }
+        }
+      }
+    },
+    "HiDPI nativo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Native HiDPI"
+          }
+        }
+      }
+    },
+    "Hz": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hz"
+          }
+        }
+      }
+    },
+    "Iniciar no login": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open at login"
+          }
+        }
+      }
+    },
+    "Instale o perfil HiDPI abaixo para liberar este modo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install the HiDPI profile below to unlock this mode."
+          }
+        }
+      }
+    },
+    "LiteDisplay": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiteDisplay"
+          }
+        }
+      }
+    },
+    "LiteDisplay %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiteDisplay %@"
+          }
+        }
+      }
+    },
+    "Maior": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Larger"
+          }
+        }
+      }
+    },
+    "Mais ações": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More actions"
+          }
+        }
+      }
+    },
+    "Mais espaço": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More space"
+          }
+        }
+      }
+    },
+    "Mantém a taxa de atualização. Pede a senha de administrador e reconectar o monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keeps the refresh rate. Requires the administrator password and reconnecting the display."
+          }
+        }
+      }
+    },
+    "Mantém a tela virtual e a restauração automática disponíveis desde o início da sessão.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keeps the virtual display and automatic restore available from the start of the session."
+          }
+        }
+      }
+    },
+    "Marque “Aplicar ao conectar” para o LiteDisplay restaurar tudo sozinho.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check “Apply on connect” so LiteDisplay restores everything by itself."
+          }
+        }
+      }
+    },
+    "Monitor %@:%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display %1$@:%2$@"
+          }
+        }
+      }
+    },
+    "Monitor desconectado": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnected display"
+          }
+        }
+      }
+    },
+    "Monitores": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Displays"
+          }
+        }
+      }
+    },
+    "Mostrar a janela ao abrir o app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the window when the app opens"
+          }
+        }
+      }
+    },
+    "Muito maior": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Much larger"
+          }
+        }
+      }
+    },
+    "Método: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Method: %@"
+          }
+        }
+      }
+    },
+    "Nenhum monitor externo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No external display"
+          }
+        }
+      }
+    },
+    "Nenhum monitor externo conectado": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No external display connected"
+          }
+        }
+      }
+    },
+    "Nenhum perfil ainda": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No profiles yet"
+          }
+        }
+      }
+    },
+    "Nitidez": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharpness"
+          }
+        }
+      }
+    },
+    "No modo padrão o monitor usa a resolução nativa. Escolha HiDPI nativo ou Tela virtual para texto nítido.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In standard mode the display uses its native resolution. Choose Native HiDPI or Virtual display for sharp text."
+          }
+        }
+      }
+    },
+    "Nome do perfil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile name"
+          }
+        }
+      }
+    },
+    "Novo perfil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New profile"
+          }
+        }
+      }
+    },
+    "Não foi possível alterar o item de login: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not change the login item: %@"
+          }
+        }
+      }
+    },
+    "Não foi possível criar a tela virtual (%@).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not create the virtual display (%@)."
+          }
+        }
+      }
+    },
+    "Não foi possível gravar a preferência de suavização.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not write the font smoothing preference."
+          }
+        }
+      }
+    },
+    "Não foi possível salvar: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not save: %@"
+          }
+        }
+      }
+    },
+    "O LiteDisplay pode instalar um perfil em /Library/Displays com resoluções HiDPI de %@ para baixo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiteDisplay can install a profile in /Library/Displays with HiDPI resolutions from %@ down."
+          }
+        }
+      }
+    },
+    "O LiteDisplay precisa de permissão de administrador para instalar o perfil HiDPI do monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LiteDisplay needs administrator permission to install the display’s HiDPI profile."
+          }
+        }
+      }
+    },
+    "O identificador do monitor é inválido.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The display identifier is invalid."
+          }
+        }
+      }
+    },
+    "O macOS desenha na resolução do painel, sem suavização HiDPI. Texto serrilhado em monitores Full HD.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS renders at the panel resolution without HiDPI smoothing. Jagged text on Full HD displays."
+          }
+        }
+      }
+    },
+    "O macOS não oferece modos HiDPI para este painel.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS offers no HiDPI modes for this panel."
+          }
+        }
+      }
+    },
+    "O macOS recusou a mudança de modo (%@, código %d).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS refused the mode change (%1$@, code %2$d)."
+          }
+        }
+      }
+    },
+    "O monitor espelha uma tela virtual %@ desenhada em 2x.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The display mirrors a %@ virtual display rendered at 2x."
+          }
+        }
+      }
+    },
+    "O monitor não está mais conectado.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The display is no longer connected."
+          }
+        }
+      }
+    },
+    "O monitor não ficou no modo pedido.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The display did not end up in the requested mode."
+          }
+        }
+      }
+    },
+    "O perfil instalado não confere: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The installed profile does not match: %@"
+          }
+        }
+      }
+    },
+    "Padrão": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard"
+          }
+        }
+      }
+    },
+    "Padrão (1x)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard (1x)"
+          }
+        }
+      }
+    },
+    "Painel %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panel %@"
+          }
+        }
+      }
+    },
+    "Parece": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looks like"
+          }
+        }
+      }
+    },
+    "Perfil HiDPI instalado. Reconecte o monitor (ou reinicie o Mac) para ver as novas resoluções.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HiDPI profile installed. Reconnect the display (or restart the Mac) to see the new resolutions."
+          }
+        }
+      }
+    },
+    "Perfil instalado. Desconecte e reconecte o monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile installed. Unplug and reconnect the display."
+          }
+        }
+      }
+    },
+    "Perfil “%@” salvo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profile “%@” saved."
+          }
+        }
+      }
+    },
+    "Perfis": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profiles"
+          }
+        }
+      }
+    },
+    "Personalizado": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom"
+          }
+        }
+      }
+    },
+    "Pixels": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pixels"
+          }
+        }
+      }
+    },
+    "Principal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Main"
+          }
+        }
+      }
+    },
+    "Reabra o LiteDisplay para removê-la.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reopen LiteDisplay to remove it."
+          }
+        }
+      }
+    },
+    "Reabrir o LiteDisplay": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reopen LiteDisplay"
+          }
+        }
+      }
+    },
+    "Reaplica o perfil marcado “ao conectar” ou a última configuração usada no monitor.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reapplies the profile marked “on connect” or the last configuration used on the display."
+          }
+        }
+      }
+    },
+    "Recomendado": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recommended"
+          }
+        }
+      }
+    },
+    "Reconecte o cabo e tente novamente.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reconnect the cable and try again."
+          }
+        }
+      }
+    },
+    "Restaurar ao conectar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore on connect"
+          }
+        }
+      }
+    },
+    "Saia de apps em tela cheia e tente de novo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave full-screen apps and try again."
+          }
+        }
+      }
+    },
+    "Sair": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit"
+          }
+        }
+      }
+    },
+    "Salvar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "Salvar configuração atual…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save current configuration…"
+          }
+        }
+      }
+    },
+    "Sem modo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No mode"
+          }
+        }
+      }
+    },
+    "Será salvo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Will be saved"
+          }
+        }
+      }
+    },
+    "Sistema": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System"
+          }
+        }
+      }
+    },
+    "Sobre": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        }
+      }
+    },
+    "Suavização de fontes mais forte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stronger font smoothing"
+          }
+        }
+      }
+    },
+    "Só HiDPI": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HiDPI only"
+          }
+        }
+      }
+    },
+    "Tamanho": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Size"
+          }
+        }
+      }
+    },
+    "Tamanho da interface": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Interface size"
+          }
+        }
+      }
+    },
+    "Tamanho e taxa ficam fixos enquanto ela estiver ligada; o espelhamento é desfeito ao sair do app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Size and rate stay fixed while it is on; mirroring is undone when the app quits."
+          }
+        }
+      }
+    },
+    "Tamanhos HiDPI: tudo continua nítido, muda só o espaço na tela.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "HiDPI sizes: everything stays sharp, only the space on screen changes."
+          }
+        }
+      }
+    },
+    "Taxa de atualização": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh rate"
+          }
+        }
+      }
+    },
+    "Tela virtual": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual display"
+          }
+        }
+      }
+    },
+    "Tela virtual ativa": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual display active"
+          }
+        }
+      }
+    },
+    "Tente novamente ou use o modo HiDPI nativo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again or use native HiDPI."
+          }
+        }
+      }
+    },
+    "Tente novamente.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again."
+          }
+        }
+      }
+    },
+    "Texto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text"
+          }
+        }
+      }
+    },
+    "Texto nítido": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharp text"
+          }
+        }
+      }
+    },
+    "Texto nítido em %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharp text on %@"
+          }
+        }
+      }
+    },
+    "Texto nítido em monitores Full HD no Mac. Sem rede, sem telemetria: tudo acontece no seu Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sharp text on Full HD displays on the Mac. No network, no telemetry: everything happens on your Mac."
+          }
+        }
+      }
+    },
+    "Texto, inicialização e comportamento ao conectar monitores.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text, startup and behaviour when displays connect."
+          }
+        }
+      }
+    },
+    "Todos os modos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All modes"
+          }
+        }
+      }
+    },
+    "Use o modo HiDPI nativo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use native HiDPI."
+          }
+        }
+      }
+    },
+    "Use “Habilitar HiDPI neste monitor” ou a tela virtual.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use “Enable HiDPI on this display” or the virtual display."
+          }
+        }
+      }
+    },
+    "Verifique o espaço em disco e as permissões de /Library/Displays.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check free disk space and the permissions of /Library/Displays."
+          }
+        }
+      }
+    },
+    "Verifique o espaço em disco.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check free disk space."
+          }
+        }
+      }
+    },
+    "arquivo ausente": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "file missing"
+          }
+        }
+      }
+    },
+    "desenhando %@ px": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rendering %@ px"
+          }
+        }
+      }
+    },
+    "dê um nome ao perfil e conecte um monitor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "name the profile and connect a display"
+          }
+        }
+      }
+    },
+    "formato inválido": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "invalid format"
+          }
+        }
+      }
+    },
+    "identificadores diferentes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "different identifiers"
+          }
+        }
+      }
+    },
+    "perfil inválido": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "invalid profile"
+          }
+        }
+      }
+    },
+    "resoluções diferentes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "different resolutions"
+          }
+        }
+      }
+    },
+    "Ícone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Icon"
+          }
+        }
+      }
+    },
+    "“%@” aplicado.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” applied."
+          }
+        }
+      }
+    },
+    "“%@” já estava aplicado.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” was already applied."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

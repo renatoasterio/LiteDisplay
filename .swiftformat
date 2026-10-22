@@ -1,0 +1,26 @@
+# SwiftFormat configuration for LiteDisplay
+--swiftversion 6.0
+--indent 4
+--maxwidth 140
+--tabwidth 4
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+--commas inline
+--semicolons never
+--self remove
+--selfrequired log,trace,debug,info,notice,warning,error,critical,fault
+--stripunusedargs closure-only
+--importgrouping testable-bottom
+--extensionacl on-declarations
+--patternlet hoist
+--elseposition same-line
+--guardelse same-line
+--ifdef no-indent
+--trimwhitespace always
+--emptybraces no-space
+--header "LiteDisplay\nCopyright (c) {year} Renato Asterio\nLicensed under the PolyForm Noncommercial License 1.0.0"
+--exclude LiteDisplay.xcodeproj,.build,DerivedData,scripts
+--disable andOperator,wrapMultilineStatementBraces,redundantRawValues,preferKeyPath
+--enable isEmpty,blankLinesBetweenImports,sortImports

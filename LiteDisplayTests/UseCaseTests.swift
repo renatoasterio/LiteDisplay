@@ -20,7 +20,7 @@ struct UseCaseHarness {
         modes.provider = provider
         virtual.provider = provider
         modes.current[display.id] = display.currentMode
-        sharpness = SetSharpnessUseCase(modes: modes, virtualDisplays: virtual, settings: settings)
+        sharpness = SetSharpnessUseCase(displays: provider, modes: modes, virtualDisplays: virtual, settings: settings)
     }
 
     var display: DisplaySnapshot {
@@ -85,6 +85,21 @@ struct SetSharpnessUseCaseTests {
         #expect(harness.virtual.deactivations == 1)
         #expect(harness.virtual.active.isEmpty)
         #expect(harness.modes.applied.last?.mode.isHiDPI == true)
+    }
+
+    @Test("Leaving the virtual display re-reads the panel's mode table before choosing a mode")
+    func leaveVirtualRereadsModes() async throws {
+        let harness = UseCaseHarness()
+        try await harness.sharpness.execute(.init(display: harness.display, method: .virtualDisplay))
+        // What the UI holds while mirrored: the panel with a reduced mode table.
+        let stale = Fixtures.display(
+            modes: Fixtures.fullHDModesWithoutOverride(),
+            current: harness.display.currentMode,
+            mirroringVirtual: true
+        )
+        try await harness.sharpness.execute(.init(display: stale, method: .hiDPI))
+        #expect(harness.virtual.deactivations == 1)
+        #expect(harness.modes.applied.last?.mode.size == DisplaySize(width: 1904, height: 1071))
     }
 
     @Test("HiDPI without usable modes fails with a recovery suggestion")

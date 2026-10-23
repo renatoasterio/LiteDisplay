@@ -10,7 +10,8 @@ import Foundation
 /// from the command line:
 ///
 ///     LiteDisplay --litedisplay-method hiDPI|standard|virtualDisplay [--litedisplay-size 1600x900]
-///                 [--litedisplay-rate 120] [--litedisplay-quit-after 5]
+///                 [--litedisplay-rate 120] [--litedisplay-then standard --litedisplay-then-after 20]
+///                 [--litedisplay-quit-after 5]
 ///
 /// Results are logged under the `app` category and printed to stderr. Never compiled into Release.
 @MainActor
@@ -19,6 +20,9 @@ enum DebugAutomation {
         let method: SharpnessMethod
         let size: DisplaySize?
         let refreshRate: Double?
+        /// A second method applied after `thenAfter` seconds, to exercise a full activate/deactivate cycle in one process.
+        let then: SharpnessMethod?
+        let thenAfter: Double
         let quitAfter: Double?
     }
 
@@ -31,7 +35,9 @@ enum DebugAutomation {
         }
         let rate = value(for: "--litedisplay-rate", in: arguments).flatMap(Double.init)
         let quitAfter = value(for: "--litedisplay-quit-after", in: arguments).flatMap(Double.init)
-        return Request(method: method, size: size, refreshRate: rate, quitAfter: quitAfter)
+        let then = value(for: "--litedisplay-then", in: arguments).flatMap(SharpnessMethod.init(rawValue:))
+        let thenAfter = value(for: "--litedisplay-then-after", in: arguments).flatMap(Double.init) ?? 10
+        return Request(method: method, size: size, refreshRate: rate, then: then, thenAfter: thenAfter, quitAfter: quitAfter)
     }
 
     static func run(_ request: Request, container: AppContainer) async {
@@ -57,6 +63,19 @@ enum DebugAutomation {
         report("after: \(mode) method=\(method) virtual=\(after?.isMirroringVirtualDisplay ?? false)")
         if let error = container.monitors.error {
             report("error: \(error.localizedDescription) — \(error.recoverySuggestion ?? "")")
+        }
+        if let then = request.then {
+            try? await Task.sleep(for: .seconds(request.thenAfter))
+            if let current = container.monitors.display(withID: display.id) {
+                await container.monitors.setMethod(then, for: current)
+                let final = container.monitors.display(withID: display.id)
+                let mode = final?.currentMode?.summary ?? "-"
+                let method = final?.activeMethod.rawValue ?? "-"
+                report("then: \(mode) method=\(method) virtual=\(final?.isMirroringVirtualDisplay ?? false)")
+                if let error = container.monitors.error {
+                    report("then error: \(error.localizedDescription) — \(error.recoverySuggestion ?? "")")
+                }
+            }
         }
         finish(after: request.quitAfter)
     }

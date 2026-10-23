@@ -5,9 +5,15 @@
 import AppKit
 import CoreGraphics
 
-/// Creates a 2x virtual display the size of the panel's backing store and mirrors the panel onto it, so the
-/// GPU renders at exactly 2x and downsamples 2:1. The virtual display lives as long as its object is retained;
+/// Creates a virtual display whose native mode is the panel's size at 2x (e.g. "looks like 1920×1080" backed by
+/// 3840×2160) and mirrors the panel onto it, so the GPU renders at exactly 2x and downsamples 2:1. The virtual display lives as long as its
+/// object is retained;
 /// this service is its only owner. The private API is behind a runtime guard and weak linking.
+///
+/// A virtual display that took part in a configuration transaction is only removed by the window server when the
+/// process exits (measured on macOS 27: still online 20 s after release). Deactivation therefore unmirrors, restores
+/// the panel and reports `.lingering`; the app relaunches itself to free the display. Sleep uses suspend/resume,
+/// which keeps the same virtual display instead of creating a new one per wake.
 @MainActor
 final class VirtualDisplayService: VirtualDisplayControlling {
     private static let requiredClasses = [
@@ -17,7 +23,8 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         "CGVirtualDisplayMode"
     ]
     private static let onlineTimeout: Duration = .seconds(3)
-    private static let removalTimeout: Duration = .seconds(2)
+    private static let modeTableTimeout: Duration = .seconds(3)
+    private static let removalTimeout: Duration = .milliseconds(1500)
     private static let pollInterval: Duration = .milliseconds(50)
     private static let fallbackRate = 60.0
     private static let fallbackSizeMM = CGSize(width: 600, height: 340)
@@ -25,20 +32,33 @@ final class VirtualDisplayService: VirtualDisplayControlling {
     private struct Handle {
         let display: CGVirtualDisplay
         let virtualID: UInt32
+        /// The panel was the main display: the virtual display takes the origin and the panel gets it back later.
+        let keepsMain: Bool
     }
 
     /// Physical display id → virtual display mirrored by it.
     private var handles: [UInt32: Handle] = [:]
+    /// Physical display id → virtual display kept alive while unmirrored for system sleep.
+    private var suspended: [UInt32: Handle] = [:]
+    /// Released virtual displays the window server has not removed yet.
+    private var lingering: Set<UInt32> = []
+    /// Makes every virtual display a new identity: the window server remembers the last mode per
+    /// vendor/product/serial, and a remembered 1x mode would override the 2x default.
+    private var activationCount: UInt32 = 0
     private let queue = DispatchQueue(label: "br.com.asoft.LiteDisplay.virtual-display")
 
     let isAvailable: Bool = VirtualDisplayService.requiredClasses.allSatisfy { NSClassFromString($0) != nil }
 
     var ownedDisplayIDs: Set<UInt32> {
-        Set(handles.values.map(\.virtualID))
+        Set(handles.values.map(\.virtualID)).union(suspended.values.map(\.virtualID)).union(lingering)
+    }
+
+    var lingeringDisplayIDs: Set<UInt32> {
+        lingering
     }
 
     func isActive(for displayID: UInt32) -> Bool {
-        handles[displayID] != nil
+        handles[displayID] != nil || suspended[displayID] != nil
     }
 
     func activate(for display: DisplaySnapshot) async throws(LiteDisplayError) {
@@ -49,11 +69,19 @@ final class VirtualDisplayService: VirtualDisplayControlling {
 
         let virtualDisplay = try makeVirtualDisplay(for: display, native: native, rate: panelRate)
         let virtualID = virtualDisplay.displayID
-        handles[display.id] = Handle(display: virtualDisplay, virtualID: virtualID)
+        handles[display.id] = Handle(display: virtualDisplay, virtualID: virtualID, keepsMain: display.isMain)
         Log.virtualDisplay.info("Created virtual display \(virtualID) for display \(display.id)")
         do {
             try await waitUntilOnline(virtualID)
-            try mirror(physical: display.id, onto: virtualID, native: native, rate: panelRate)
+            let virtualModes = try await waitForModeTable(virtualID)
+            try mirror(
+                physical: display.id,
+                onto: virtualID,
+                virtualModes: virtualModes,
+                native: native,
+                rate: panelRate,
+                asMain: display.isMain
+            )
         } catch {
             handles[display.id] = nil
             Log.virtualDisplay.error("Virtual display setup failed: \(error.localizedDescription, privacy: .public)")
@@ -61,18 +89,25 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         }
     }
 
-    func deactivate(for displayID: UInt32) async throws(LiteDisplayError) {
-        guard let handle = handles[displayID] else { return }
+    @discardableResult
+    func deactivate(for displayID: UInt32) async throws(LiteDisplayError) -> VirtualDisplayDeactivation {
+        guard let handle = handles[displayID] ?? suspended[displayID] else { return .removed }
         if CGDisplayMirrorsDisplay(displayID) == handle.virtualID {
-            try unmirror(physical: displayID)
+            try unmirror(physical: displayID, restoreMain: handle.keepsMain)
         }
-        handles[displayID] = nil // releases the CGVirtualDisplay; the window server removes the display
+        handles[displayID] = nil // releases the CGVirtualDisplay
+        suspended[displayID] = nil
         Log.virtualDisplay.info("Released virtual display \(handle.virtualID)")
-        try await waitUntilRemoved(handle.virtualID)
+        if await waitUntilRemoved(handle.virtualID) {
+            return .removed
+        }
+        lingering.insert(handle.virtualID)
+        Log.virtualDisplay.notice("Virtual display \(handle.virtualID) lingers until the process exits")
+        return .lingering
     }
 
     func deactivateAll() async {
-        for displayID in Array(handles.keys) {
+        for displayID in Array(handles.keys) + Array(suspended.keys) {
             do {
                 try await deactivate(for: displayID)
             } catch {
@@ -82,10 +117,54 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         }
     }
 
+    func suspendAll() {
+        for (displayID, handle) in handles {
+            if CGDisplayMirrorsDisplay(displayID) == handle.virtualID {
+                do {
+                    try unmirror(physical: displayID, restoreMain: handle.keepsMain)
+                } catch {
+                    Log.virtualDisplay
+                        .error("Unmirror before sleep failed for \(displayID): \(error.localizedDescription, privacy: .public)")
+                }
+            }
+            suspended[displayID] = handle
+        }
+        handles.removeAll()
+    }
+
+    func resumeAll() throws(LiteDisplayError) {
+        let pending = suspended
+        suspended.removeAll()
+        for (displayID, handle) in pending {
+            guard CGDisplayIsOnline(displayID) != 0, CGDisplayIsOnline(handle.virtualID) != 0 else {
+                Log.virtualDisplay.notice("Virtual display \(handle.virtualID) or its panel went away during sleep")
+                continue
+            }
+            let panelModes = DisplayModeCatalog.usableModes(for: displayID)
+            let rate = DisplayModeCatalog.currentMode(of: displayID)?.refreshRate
+            guard let native = ModeSelection.nativeMode(in: panelModes, preferredRate: rate) else { continue }
+            let virtualModes = DisplayModeCatalog.usableModes(for: handle.virtualID)
+            do {
+                try mirror(
+                    physical: displayID,
+                    onto: handle.virtualID,
+                    virtualModes: virtualModes,
+                    native: native,
+                    rate: native.refreshRate,
+                    asMain: handle.keepsMain
+                )
+                handles[displayID] = handle
+            } catch {
+                lingering.insert(handle.virtualID)
+                throw error
+            }
+        }
+    }
+
     func releaseAll() {
         for (displayID, handle) in handles where CGDisplayMirrorsDisplay(displayID) == handle.virtualID {
             do {
-                try unmirror(physical: displayID)
+                try unmirror(physical: displayID, restoreMain: handle.keepsMain)
             } catch {
                 Log.virtualDisplay.error("Unmirror at exit failed for \(displayID): \(error.localizedDescription, privacy: .public)")
             }
@@ -104,7 +183,8 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         descriptor.name = "LiteDisplay – \(display.name)"
         descriptor.vendorID = DisplaySnapshot.virtualDisplayVendorID // macOS 14+ rejects a zero vendor id
         descriptor.productID = display.productID & 0xFFFF
-        descriptor.serialNum = display.serialNumber &+ 1 // distinct from the panel, stable across launches
+        activationCount &+= 1
+        descriptor.serialNum = UInt32(truncatingIfNeeded: Int(Date().timeIntervalSince1970)) &+ activationCount
         descriptor.maxPixelsWide = UInt32(native.pixelWidth * 2)
         descriptor.maxPixelsHigh = UInt32(native.pixelHeight * 2)
         descriptor.sizeInMillimeters = display.physicalSize.isKnown
@@ -120,8 +200,11 @@ final class VirtualDisplayService: VirtualDisplayControlling {
 
         guard let virtualDisplay = CGVirtualDisplay(descriptor: descriptor) else { throw .virtualDisplayFailed("init") }
 
-        let width = UInt32(native.pixelWidth * 2)
-        let height = UInt32(native.pixelHeight * 2)
+        // Mode sizes are in points: with hiDPI = 1 the window server also creates the 2x variant whenever
+        // 2 × size fits maxPixelsWide/High. Listing the panel's native point size therefore yields a native
+        // "looks like 1920×1080" mode backed by 3840×2160, which becomes the display's default: no mode change.
+        let width = UInt32(native.width)
+        let height = UInt32(native.height)
         let settings = CGVirtualDisplaySettings()
         settings.hiDPI = 1
         let fallback = CGVirtualDisplayMode(width: width, height: height, refreshRate: Self.fallbackRate)
@@ -145,18 +228,37 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         }
     }
 
-    /// The go-macos/virtualdisplay project documents that a virtual display whose mode was changed can linger
-    /// until the process exits; the UI offers a relaunch in that case.
-    private func waitUntilRemoved(_ virtualID: UInt32) async throws(LiteDisplayError) {
-        let deadline = ContinuousClock.now + Self.removalTimeout
-        while CGDisplayIsOnline(virtualID) != 0 {
-            guard ContinuousClock.now < deadline else { throw .virtualDisplayLingering }
+    /// The mode table fills a few hundred milliseconds after the display reports online.
+    private func waitForModeTable(_ virtualID: UInt32) async throws(LiteDisplayError) -> [DisplayMode] {
+        let deadline = ContinuousClock.now + Self.modeTableTimeout
+        while true {
+            let modes = DisplayModeCatalog.usableModes(for: virtualID)
+            if modes.contains(where: \.isHiDPI) {
+                return modes
+            }
+            guard ContinuousClock.now < deadline else { throw .virtualDisplayFailed("no HiDPI mode") }
             try? await Task.sleep(for: Self.pollInterval)
         }
     }
 
-    private func mirror(physical: UInt32, onto virtualID: UInt32, native: DisplayMode, rate: Double) throws(LiteDisplayError) {
-        let virtualModes = DisplayModeCatalog.usableModes(for: virtualID)
+    /// True when the window server dropped the display within `removalTimeout`.
+    private func waitUntilRemoved(_ virtualID: UInt32) async -> Bool {
+        let deadline = ContinuousClock.now + Self.removalTimeout
+        while CGDisplayIsOnline(virtualID) != 0 {
+            guard ContinuousClock.now < deadline else { return false }
+            try? await Task.sleep(for: Self.pollInterval)
+        }
+        return true
+    }
+
+    private func mirror(
+        physical: UInt32,
+        onto virtualID: UInt32,
+        virtualModes: [DisplayMode],
+        native: DisplayMode,
+        rate: Double,
+        asMain: Bool
+    ) throws(LiteDisplayError) {
         let target = ModeSelection.mode(in: virtualModes, size: native.size, hiDPI: true, preferredRate: rate)
             ?? virtualModes.filter(\.isHiDPI).max { $0.size < $1.size }
         guard let target, let cgTarget = DisplayModeCatalog.cgMode(matching: target, on: virtualID) else {
@@ -179,6 +281,15 @@ final class VirtualDisplayService: VirtualDisplayControlling {
             CGCancelDisplayConfiguration(config)
             throw .configurationFailed(stage: "mirror", code: mirror.rawValue)
         }
+        // The main display is the one at the origin. Setting the origin of the mirror *source* keeps the menu bar on
+        // the panel; setting it on the mirroring panel would remove it from the set (CGDisplayConfiguration.h).
+        if asMain {
+            let origin = CGConfigureDisplayOrigin(config, virtualID, 0, 0)
+            guard origin == .success else {
+                CGCancelDisplayConfiguration(config)
+                throw .configurationFailed(stage: "origin", code: origin.rawValue)
+            }
+        }
         // For the session only: the master vanishes with the app, so a permanent mirror record would be stale.
         let complete = CGCompleteDisplayConfiguration(config, .forSession)
         guard complete == .success else { throw .configurationFailed(stage: "complete", code: complete.rawValue) }
@@ -186,7 +297,7 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         restoreRateIfNeeded(physical: physical, native: native, rate: rate)
     }
 
-    private func unmirror(physical: UInt32) throws(LiteDisplayError) {
+    private func unmirror(physical: UInt32, restoreMain: Bool) throws(LiteDisplayError) {
         var config: CGDisplayConfigRef?
         let begin = CGBeginDisplayConfiguration(&config)
         guard begin == .success, let config else { throw .configurationFailed(stage: "begin", code: begin.rawValue) }
@@ -194,6 +305,13 @@ final class VirtualDisplayService: VirtualDisplayControlling {
         guard unmirror == .success else {
             CGCancelDisplayConfiguration(config)
             throw .configurationFailed(stage: "unmirror", code: unmirror.rawValue)
+        }
+        if restoreMain {
+            let origin = CGConfigureDisplayOrigin(config, physical, 0, 0)
+            guard origin == .success else {
+                CGCancelDisplayConfiguration(config)
+                throw .configurationFailed(stage: "origin", code: origin.rawValue)
+            }
         }
         let complete = CGCompleteDisplayConfiguration(config, .forSession)
         guard complete == .success else { throw .configurationFailed(stage: "complete", code: complete.rawValue) }

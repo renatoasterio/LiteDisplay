@@ -57,6 +57,22 @@ struct MonitorsViewModelTests {
         #expect(plainViewModel.displays[0].activeMethod == .virtualDisplay)
     }
 
+    @Test("A lingering virtual display schedules a relaunch after the mode was still applied")
+    func lingeringVirtualDisplayRelaunches() async throws {
+        let (viewModel, harness) = makeViewModel()
+        harness.virtual.lingers = true
+        var relaunched = false
+        viewModel.relaunchHandler = { relaunched = true }
+        await viewModel.setMethod(.virtualDisplay, for: viewModel.displays[0])
+        #expect(viewModel.notice == nil)
+        await viewModel.setMethod(.hiDPI, for: viewModel.displays[0])
+        #expect(viewModel.displays[0].activeMethod == .hiDPI)
+        #expect(viewModel.error == nil)
+        #expect(viewModel.notice != nil)
+        try await Task.sleep(for: .milliseconds(2300))
+        #expect(relaunched)
+    }
+
     @Test("Curated sizes and rates come from the display's own table")
     func derivedData() {
         let (viewModel, _) = makeViewModel()

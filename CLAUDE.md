@@ -49,7 +49,10 @@ Finder metadata on new bundles and breaks `codesign`. Never pass `-derivedDataPa
    mirrors, verify after completing. `CGDisplaySetDisplayMode` is forbidden (it reverts at exit). Mode identity is
    `ioDisplayModeID` with a `ModeKey` fallback. Always pass `kCGDisplayShowDuplicateLowResolutionModes`.
 4. **Virtual displays**: `VirtualDisplayService` is the only owner of `CGVirtualDisplay` objects; never set a
-   `terminationHandler`; only change the virtual mode when needed; tear down before sleep and before quitting.
+   `terminationHandler`; `CGVirtualDisplayMode` sizes are points (list the panel's native size with `maxPixels` = 2×, so the
+   2x mode is the default); only change the virtual mode when needed; a released virtual display lingers until the process exits, so
+   deactivation reports `.lingering` and the app relaunches itself; sleep uses `suspendAll()`/`resumeAll()`, quit uses
+   `releaseAll()`.
 5. **Memory**: `[weak self]` in escaping closures (or a `// lifetime:` comment), Tasks stored and cancelled,
    reconfiguration callback removed in `deinit`, observers removed in `stop()`/`deinit`.
 6. **Concurrency**: Swift 6 strict. UI, `CGDisplayMode` and the private classes stay on `@MainActor`; C callbacks are

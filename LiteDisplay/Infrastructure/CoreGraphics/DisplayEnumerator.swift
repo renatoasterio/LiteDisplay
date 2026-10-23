@@ -11,6 +11,15 @@ final class DisplayEnumerator: DisplayProviding {
     private static let maxDisplays: UInt32 = 32
     private let observer = DisplayReconfigurationObserver()
     private let virtualDisplays: any VirtualDisplayControlling
+    /// A panel that mirrors a virtual display leaves `NSScreen.screens` and reports a reduced mode table and a
+    /// doubled physical size; what it looked like standing alone is kept by persistent id.
+    private struct StandaloneFacts {
+        let name: String?
+        let physicalSize: PhysicalSize
+        let modes: [DisplayMode]
+    }
+
+    private var standalone: [String: StandaloneFacts] = [:]
 
     init(virtualDisplays: any VirtualDisplayControlling) {
         self.virtualDisplays = virtualDisplays
@@ -40,23 +49,38 @@ final class DisplayEnumerator: DisplayProviding {
         let product = CGDisplayModelNumber(displayID)
         let serial = CGDisplaySerialNumber(displayID)
         let mirrorSource = CGDisplayMirrorsDisplay(displayID)
+        let isMirroringVirtual = owned.contains(mirrorSource)
+        let persistentID = Self.persistentID(for: displayID, vendor: vendor, product: product, serial: serial)
+        let liveName = NSScreen.screen(for: displayID)?.localizedName
         let size = CGDisplayScreenSize(displayID)
-        let name = NSScreen.screen(for: displayID)?.localizedName
+        var physicalSize = PhysicalSize(widthMM: size.width, heightMM: size.height)
+        var modes = DisplayModeCatalog.usableModes(for: displayID)
+        if isMirroringVirtual, let facts = standalone[persistentID] {
+            physicalSize = facts.physicalSize
+            modes = facts.modes
+        } else if !isMirroringVirtual {
+            standalone[persistentID] = StandaloneFacts(
+                name: liveName ?? standalone[persistentID]?.name,
+                physicalSize: physicalSize,
+                modes: modes
+            )
+        }
+        let name = liveName ?? standalone[persistentID]?.name
             ?? String(localized: "Monitor \(String(vendor, radix: 16)):\(String(product, radix: 16))")
         return DisplaySnapshot(
             id: displayID,
-            persistentID: Self.persistentID(for: displayID, vendor: vendor, product: product, serial: serial),
+            persistentID: persistentID,
             name: name,
             vendorID: vendor,
             productID: product,
             serialNumber: serial,
-            physicalSize: PhysicalSize(widthMM: size.width, heightMM: size.height),
+            physicalSize: physicalSize,
             isMain: CGDisplayIsMain(displayID) != 0,
             isBuiltIn: false,
             mirrorSourceID: mirrorSource == 0 ? nil : mirrorSource,
-            isMirroringVirtualDisplay: owned.contains(mirrorSource),
+            isMirroringVirtualDisplay: isMirroringVirtual,
             currentMode: DisplayModeCatalog.currentMode(of: displayID),
-            modes: DisplayModeCatalog.usableModes(for: displayID)
+            modes: modes
         )
     }
 

@@ -18,12 +18,16 @@ final class MonitorsViewModel {
     let isVirtualDisplayAvailable: Bool
 
     @ObservationIgnored private let provider: any DisplayProviding
+    @ObservationIgnored private let virtualDisplays: any VirtualDisplayControlling
     @ObservationIgnored private let sharpness: SetSharpnessUseCase
     @ObservationIgnored private let resolution: ChangeResolutionUseCase
     @ObservationIgnored private let overrideInstaller: EnableHiDPIOverrideUseCase
     @ObservationIgnored private let reapply: ReapplyOnConnectUseCase
     @ObservationIgnored private var observation: Task<Void, Never>?
     @ObservationIgnored private var pendingRefresh: Task<Void, Never>?
+    @ObservationIgnored private var relaunch: Task<Void, Never>?
+    /// Restarts the app; set by the composition root. A released virtual display only disappears with the process.
+    @ObservationIgnored var relaunchHandler: (@MainActor () -> Void)?
     /// Displays whose override was installed in this session and still need a reconnection.
     @ObservationIgnored private var pendingOverrides: Set<String> = []
 
@@ -36,6 +40,7 @@ final class MonitorsViewModel {
         reapply: ReapplyOnConnectUseCase
     ) {
         self.provider = provider
+        self.virtualDisplays = virtualDisplays
         self.sharpness = sharpness
         self.resolution = resolution
         self.overrideInstaller = overrideInstaller
@@ -62,6 +67,19 @@ final class MonitorsViewModel {
         observation = nil
         pendingRefresh?.cancel()
         pendingRefresh = nil
+        relaunch?.cancel()
+        relaunch = nil
+    }
+
+    /// After a virtual display was turned off, the app restarts itself so the window server drops the display.
+    func relaunchIfVirtualDisplayLingers() {
+        guard !virtualDisplays.lingeringDisplayIDs.isEmpty, relaunch == nil else { return }
+        notice = String(localized: "Tela virtual desligada. O LiteDisplay vai reabrir em instantes para liberá-la.")
+        relaunch = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(2))
+            guard let self, !Task.isCancelled else { return }
+            relaunchHandler?()
+        }
     }
 
     func refresh() {
@@ -141,6 +159,7 @@ final class MonitorsViewModel {
             Log.ui.error("Display action failed: \(error.localizedDescription, privacy: .public)")
         }
         refresh()
+        relaunchIfVirtualDisplayLingers()
     }
 
     private func handle(_ change: DisplayChange) {

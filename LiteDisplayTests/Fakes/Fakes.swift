@@ -69,8 +69,13 @@ final class FakeVirtualDisplayController: VirtualDisplayControlling {
     var failure: LiteDisplayError?
     var provider: FakeDisplayProvider?
 
+    /// When true, deactivation reports a lingering display, as the real window server does.
+    var lingers = false
+    var lingeringDisplayIDs: Set<UInt32> = []
+    var suspendedCount = 0
+
     var ownedDisplayIDs: Set<UInt32> {
-        Set(active.map { $0 + 1000 })
+        Set(active.map { $0 + 1000 }).union(lingeringDisplayIDs)
     }
 
     func isActive(for displayID: UInt32) -> Bool {
@@ -86,7 +91,8 @@ final class FakeVirtualDisplayController: VirtualDisplayControlling {
         provider?.update(displayID: display.id, currentMode: display.currentMode, mirroringVirtual: true)
     }
 
-    func deactivate(for displayID: UInt32) async throws(LiteDisplayError) {
+    @discardableResult
+    func deactivate(for displayID: UInt32) async throws(LiteDisplayError) -> VirtualDisplayDeactivation {
         active.remove(displayID)
         deactivations += 1
         provider?.update(
@@ -94,7 +100,18 @@ final class FakeVirtualDisplayController: VirtualDisplayControlling {
             currentMode: provider?.displays.first { $0.id == displayID }?.currentMode,
             mirroringVirtual: false
         )
+        if lingers {
+            lingeringDisplayIDs.insert(displayID + 1000)
+            return .lingering
+        }
+        return .removed
     }
+
+    func suspendAll() {
+        suspendedCount += active.count
+    }
+
+    func resumeAll() throws(LiteDisplayError) {}
 
     func deactivateAll() async {
         for displayID in active {

@@ -203,7 +203,8 @@ scan "Logger interpolation of name/path/url/stderr/serial without a privacy anno
 # shellcheck disable=SC2086
 file_requires "CGDisplayCopyAllDisplayModes in a file without kCGDisplayShowDuplicateLowResolutionModes (HiDPI modes hidden)" 'CGDisplayCopyAllDisplayModes' 'kCGDisplayShowDuplicateLowResolutionModes' WARN $APP_FILES
 # shellcheck disable=SC2086
-scan "Display APIs the app must never call (layout, capture, fade, restore-all)" '\b(CGConfigureDisplayOrigin|CGDisplayCapture|CGDisplayRelease|CGDisplayFade|CGAcquireDisplayFadeReservation|CGRestorePermanentDisplayConfiguration|CGConfigureDisplayStereoOperation)\b' $APP_FILES
+scan "Display APIs the app must never call (layout, capture, fade, restore-all)" '\b(CGDisplayCapture|CGDisplayRelease|CGDisplayFade|CGAcquireDisplayFadeReservation|CGRestorePermanentDisplayConfiguration|CGConfigureDisplayStereoOperation)\b' $APP_FILES
+[[ -n "$NON_VIRTUAL" ]] && scan "CGConfigureDisplayOrigin outside VirtualDisplayService (only the mirror source and the unmirrored panel may take the origin)" '\bCGConfigureDisplayOrigin\b' $NON_VIRTUAL
 # shellcheck disable=SC2086
 scan "Physical mode committed .forSession / .forAppOnly (must be .permanently; only virtual mirrors are .forSession)" 'CGCompleteDisplayConfiguration\([^)]*\.(forAppOnly)\)' $APP_FILES
 # shellcheck disable=SC2086

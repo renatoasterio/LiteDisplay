@@ -121,7 +121,7 @@ private func handle(_ change: DisplayChange) {
 }
 ```
 
-## 7. **`VirtualDisplayService.handles` is the only owner of a `CGVirtualDisplay`; deactivation unmirrors, releases, then waits with a timeout; a lingering display becomes `virtualDisplayLingering` and the UI offers a relaunch**
+## 7. **`VirtualDisplayService.handles` is the only owner of a `CGVirtualDisplay`; deactivation unmirrors, restores the panel's main role, releases, then waits briefly; a lingering display is reported as `.lingering` and the app relaunches itself**
 
 The display exists while the object is retained. `activate` refuses a second instance for the same panel, stores the handle before waiting so a failure path can release it, and on any error sets `handles[id] = nil` before rethrowing. `deactivate` first unmirrors (if the panel still mirrors the virtual id), then drops the handle, then polls `CGDisplayIsOnline` up to 2 s. If the display is still online, the error reaches `MonitorDetailView`, which shows "Reabrir o LiteDisplay" bound to `AppContainer.relaunch()` (new instance, then terminate: the only reliable way to make the window server drop it). The descriptor's `terminationHandler` stays `nil` (a block there crashes at process exit). `ownedDisplayIDs` and the stamped vendor id `0x4C44` let `DisplayEnumerator` hide virtual displays, including one left by a previous process.
 
@@ -143,6 +143,8 @@ try await waitUntilRemoved(handle.virtualID)                     // throws .virt
 ```
 
 ## 8. **The virtual display's mode is changed only when it differs from the target; polling uses `Task.sleep` with deadlines (online 3 s, removal 2 s, 50 ms interval)**
+
+`CGVirtualDisplayMode` sizes are **points**: with `hiDPI = 1` the window server adds the 2x variant of every listed size whose doubled pixels fit `maxPixelsWide/High`, and that 2x mode becomes the display's native/default mode. List the panel's native point size (1920×1080) with `maxPixels` = 2× (3840×2160); listing 3840×2160 instead yields a 1x-only display with no usable 2x mode (observed on macOS 27). A display created with the same vendor/product/serial as one just released may come up with an empty mode table, so identities stay stable and are not recycled within a session.
 
 Changing the virtual display's mode after creation is what makes it linger after release (documented by go-macos/virtualdisplay and reproduced here). `makeVirtualDisplay` offers the panel's rate and a 60 Hz fallback in `applySettings`, so the window server usually comes up on the right mode and `mirror` skips `CGConfigureDisplayWithDisplayMode` when `currentMode(of: virtualID)?.id == target.id`. Polling without yielding would block the main actor the window server may need to finish the configuration.
 
@@ -184,7 +186,7 @@ case .virtualDisplay:
     }
 ```
 
-## 10. **Sleep and quit tear virtual mirrors down first; wake restores them after the window server settles**
+## 10. **Sleep unmirrors (`suspendAll`) and wake re-mirrors the same virtual display (`resumeAll`); quit releases everything synchronously**
 
 A virtual mirror master is known to wedge system sleep. `AppContainer.suspendVirtualDisplays` (on `NSWorkspace.willSleepNotification`) remembers the affected `persistentID`s and calls `deactivateAll()`; `resumeVirtualDisplays` (on `didWakeNotification`) waits 2 s, re-enumerates and re-applies `.virtualDisplay` through the use case, cancelling any previous `wakeTask`. On quit, `applicationShouldTerminate` calls the synchronous `shutdown()`, which ends with `VirtualDisplayService.releaseAll()` (unmirror transaction, then drop the handles without waiting), and returns `.terminateNow`. Letting the process exit, sleep or crash with mirrors active leaves the panel mirroring a display that no longer exists; awaiting the teardown behind `.terminateLater` deadlocks when `terminate` was called from a main-actor `Task` (see memory rule 11).
 
@@ -259,11 +261,11 @@ if let uuid = CGDisplayCreateUUIDFromDisplayID(displayID)?.takeRetainedValue() {
 let name = NSScreen.screen(for: displayID)?.localizedName ?? String(localized: "Monitor \(String(vendor, radix: 16)):\(String(product, radix: 16))")
 ```
 
-## 14. **Only three configure calls exist in the app, and nothing captures, fades or rearranges displays**
+## 14. **Only four configure calls exist in the app, and nothing captures, fades or rearranges the user's layout**
 
-`CGConfigureDisplayWithDisplayMode` and `CGConfigureDisplayMirrorOfDisplay` (with master `0` to unmirror) are all the product needs. `CGConfigureDisplayOrigin` rearranges the user's layout, `CGDisplayCapture`/`CGDisplayRelease` take the display away from the desktop, `CGDisplayFade*` reservations can leave a black screen on a thrown error, and `CGRestorePermanentDisplayConfiguration` resets every display at once. `scripts/dump-modes.swift` is read-only diagnostics and the only display tool the audit runs by itself.
+`CGConfigureDisplayWithDisplayMode`, `CGConfigureDisplayMirrorOfDisplay` (with source `0` to unmirror) and, only inside `VirtualDisplayService`, `CGConfigureDisplayOrigin` are all the product needs. The origin call is used for exactly two things: giving the mirror *source* (the virtual display) the origin when the panel was the main display, so the menu bar stays on the panel, and giving the panel the origin back when it is unmirrored; setting the origin of a display that is itself mirroring removes it from the set (CGDisplayConfiguration.h). Anywhere else `CGConfigureDisplayOrigin` rearranges the user's layout, `CGDisplayCapture`/`CGDisplayRelease` take the display away from the desktop, `CGDisplayFade*` reservations can leave a black screen on a thrown error, and `CGRestorePermanentDisplayConfiguration` resets every display at once. `scripts/dump-modes.swift` is read-only diagnostics and the only display tool the audit runs by itself.
 
-Grep: `CGConfigureDisplayOrigin|CGDisplayCapture|CGDisplayRelease|CGDisplayFade|CGAcquireDisplayFadeReservation|CGRestorePermanentDisplayConfiguration|CGDisplaySetStereoOperation|CGConfigureDisplayStereoOperation` (expect none); `CGConfigureDisplayMirrorOfDisplay|CGBeginDisplayConfiguration` outside `Infrastructure/CoreGraphics` and `Infrastructure/VirtualDisplay` (lint error).
+Grep: `CGDisplayCapture|CGDisplayRelease|CGDisplayFade|CGAcquireDisplayFadeReservation|CGRestorePermanentDisplayConfiguration|CGDisplaySetStereoOperation|CGConfigureDisplayStereoOperation` (expect none); `CGConfigureDisplayMirrorOfDisplay|CGBeginDisplayConfiguration` outside `Infrastructure/CoreGraphics` and `Infrastructure/VirtualDisplay` (lint error).
 
 Wrong:
 ```swift

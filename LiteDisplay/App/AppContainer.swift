@@ -19,10 +19,7 @@ final class AppContainer {
     let profiles: ProfilesViewModel
     let preferences: SettingsViewModel
 
-    @ObservationIgnored private let sharpness: SetSharpnessUseCase
     @ObservationIgnored private var sleepWake: SleepWakeObserver?
-    /// Displays whose virtual mirror was torn down for sleep and must come back on wake.
-    @ObservationIgnored private var suspendedVirtualDisplays: [String] = []
     @ObservationIgnored private var wakeTask: Task<Void, Never>?
 
     init(
@@ -40,8 +37,7 @@ final class AppContainer {
         self.displays = displays
         self.virtualDisplays = virtualDisplays
 
-        let sharpness = SetSharpnessUseCase(modes: modes, virtualDisplays: virtualDisplays, settings: settings)
-        self.sharpness = sharpness
+        let sharpness = SetSharpnessUseCase(displays: displays, modes: modes, virtualDisplays: virtualDisplays, settings: settings)
         let resolution = ChangeResolutionUseCase(sharpness: sharpness)
         let enableOverride = EnableHiDPIOverrideUseCase(installer: overrideInstaller)
         let reapply = ReapplyOnConnectUseCase(displays: displays, profiles: profileStore, settings: settings, sharpness: sharpness)
@@ -60,6 +56,7 @@ final class AppContainer {
         )
         preferences = SettingsViewModel(fontSmoothing: fontSmoothing, loginItem: loginItem, settings: settings)
         profiles.displaysDidChange = { [weak self] in self?.monitors.refresh() }
+        monitors.relaunchHandler = { [weak self] in self?.relaunch() }
     }
 
     /// The production wiring.
@@ -110,31 +107,23 @@ final class AppContainer {
 
     // MARK: - Sleep / wake
 
-    /// A virtual mirror master is known to wedge system sleep; drop it before sleeping and restore on wake.
+    /// A virtual mirror source is known to wedge system sleep: unmirror before sleeping, re-mirror after waking.
     private func suspendVirtualDisplays() {
-        let active = displays.externalDisplays().filter { virtualDisplays.isActive(for: $0.id) }
-        guard !active.isEmpty else { return }
-        suspendedVirtualDisplays = active.map(\.persistentID)
-        Task { [virtualDisplays] in await virtualDisplays.deactivateAll() }
+        virtualDisplays.suspendAll()
     }
 
     private func resumeVirtualDisplays() {
-        guard !suspendedVirtualDisplays.isEmpty else { return }
         wakeTask?.cancel()
         wakeTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(2))
             guard let self, !Task.isCancelled else { return }
-            let pending = suspendedVirtualDisplays
-            suspendedVirtualDisplays = []
-            for display in displays.externalDisplays() where pending.contains(display.persistentID) {
-                do {
-                    try await sharpness.execute(.init(display: display, method: .virtualDisplay))
-                } catch {
-                    Log.virtualDisplay
-                        .error("Could not restore virtual display after wake: \(error.localizedDescription, privacy: .public)")
-                }
+            do {
+                try virtualDisplays.resumeAll()
+            } catch {
+                Log.virtualDisplay.error("Could not restore virtual display after wake: \(error.localizedDescription, privacy: .public)")
             }
             monitors.refresh()
+            monitors.relaunchIfVirtualDisplayLingers()
         }
     }
 }

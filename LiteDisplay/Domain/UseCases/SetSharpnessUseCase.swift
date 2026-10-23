@@ -14,6 +14,7 @@ struct SetSharpnessUseCase {
         var refreshRate: Double?
     }
 
+    let displays: any DisplayProviding
     let modes: any DisplayModeApplying
     let virtualDisplays: any VirtualDisplayControlling
     let settings: any SettingsStoring
@@ -32,10 +33,13 @@ struct SetSharpnessUseCase {
             }
             applied = DisplaySettings(method: .virtualDisplay, size: display.nativeSize, refreshRate: preferredRate)
         case .standard, .hiDPI:
+            var current = display
             if virtualDisplays.isActive(for: display.id) {
                 try await virtualDisplays.deactivate(for: display.id)
+                // A mirrored panel reports a reduced mode table; re-read it now that it stands alone.
+                current = displays.externalDisplays().first { $0.id == display.id } ?? display
             }
-            let target = try selectMode(for: request, preferredRate: preferredRate)
+            let target = try selectMode(for: request, on: current, preferredRate: preferredRate)
             if modes.currentMode(of: display.id)?.id != target.id {
                 try modes.apply(target, to: display.id)
             }
@@ -45,8 +49,12 @@ struct SetSharpnessUseCase {
         return applied
     }
 
-    private func selectMode(for request: Request, preferredRate: Double?) throws(LiteDisplayError) -> DisplayMode {
-        let modes = request.display.modes
+    private func selectMode(
+        for request: Request,
+        on display: DisplaySnapshot,
+        preferredRate: Double?
+    ) throws(LiteDisplayError) -> DisplayMode {
+        let modes = display.modes
         switch request.method {
         case .standard:
             if let size = request.size, let mode = ModeSelection.mode(in: modes, size: size, hiDPI: false, preferredRate: preferredRate) {
@@ -55,7 +63,7 @@ struct SetSharpnessUseCase {
             guard let native = ModeSelection.nativeMode(in: modes, preferredRate: preferredRate) else { throw .modeUnavailable }
             return native
         case .hiDPI:
-            guard request.display.hasUsableHiDPI else { throw .hiDPIUnavailable }
+            guard display.hasUsableHiDPI else { throw .hiDPIUnavailable }
             if let size = request.size, let mode = ModeSelection.mode(in: modes, size: size, hiDPI: true, preferredRate: preferredRate) {
                 return mode
             }

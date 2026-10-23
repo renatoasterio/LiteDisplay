@@ -28,6 +28,8 @@ final class MonitorsViewModel {
     @ObservationIgnored private var relaunch: Task<Void, Never>?
     /// Restarts the app; set by the composition root. A released virtual display only disappears with the process.
     @ObservationIgnored var relaunchHandler: (@MainActor () -> Void)?
+    /// Called after every enumeration, so dependent state (the blue light filter) follows display changes.
+    @ObservationIgnored var displaysDidRefresh: (@MainActor () -> Void)?
     /// Displays whose override was installed in this session and still need a reconnection.
     @ObservationIgnored private var pendingOverrides: Set<String> = []
 
@@ -85,6 +87,7 @@ final class MonitorsViewModel {
     func refresh() {
         displays = provider.externalDisplays()
         pendingOverrides = pendingOverrides.filter { id in displays.first { $0.persistentID == id }?.hasUsableHiDPI != true }
+        displaysDidRefresh?()
     }
 
     func display(withID id: UInt32) -> DisplaySnapshot? {

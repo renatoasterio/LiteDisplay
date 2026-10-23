@@ -206,3 +206,21 @@ final class FakeLoginItem: LoginItemControlling {
         opened = true
     }
 }
+
+@MainActor
+final class FakeColorTemperatureController: ColorTemperatureControlling {
+    var applied: [(gains: ChannelGains, target: ColorTemperatureTarget)] = []
+    var restores = 0
+    var failure: LiteDisplayError?
+
+    func apply(_ gains: ChannelGains, to target: ColorTemperatureTarget) throws(LiteDisplayError) {
+        if let failure {
+            throw failure
+        }
+        applied.append((gains, target))
+    }
+
+    func restore() {
+        restores += 1
+    }
+}

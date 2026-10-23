@@ -19,6 +19,8 @@ struct MenuBarMenuView: View {
                 profiles
             }
             Divider()
+            blueLight
+            Divider()
             footer
         }
         .padding(DesignTokens.Spacing.lg)
@@ -82,6 +84,30 @@ struct MenuBarMenuView: View {
                 .buttonStyle(.plain)
                 .disabled(container.profiles.isApplying)
             }
+        }
+    }
+
+    private var blueLight: some View {
+        HStack(spacing: DesignTokens.Spacing.sm) {
+            Image(systemName: container.comfort.isActiveNow ? "sun.haze.fill" : "sun.haze")
+                .foregroundStyle(container.comfort.isActiveNow ? Color.statusLowRes : Color.secondary)
+                .frame(width: 18)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Reduzir luz azul")
+                    .font(.callout.weight(.semibold))
+                Text(container.comfort.isEnabled ? container.comfort.kelvinLabel : String(localized: "Desligado"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Toggle("Reduzir luz azul", isOn: Binding(
+                get: { container.comfort.isEnabled },
+                set: { container.comfort.isEnabled = $0 }
+            ))
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .labelsHidden()
+            .accessibilityLabel(Text("Reduzir luz azul"))
         }
     }
 

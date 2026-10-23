@@ -22,6 +22,7 @@ enum LiteDisplayError: Error, Hashable, Sendable {
     case loginItemFailed(String)
     case storageFailed(String)
     case preferencesFailed
+    case gammaFailed(code: Int32)
 }
 
 extension LiteDisplayError: LocalizedError {
@@ -59,6 +60,8 @@ extension LiteDisplayError: LocalizedError {
             String(localized: "Não foi possível salvar: \(detail)")
         case .preferencesFailed:
             String(localized: "Não foi possível gravar a preferência de suavização.")
+        case let .gammaFailed(code):
+            String(localized: "O macOS recusou o ajuste de cor da tela (código \(code)).")
         }
     }
 
@@ -92,6 +95,8 @@ extension LiteDisplayError: LocalizedError {
             String(localized: "Verifique o espaço em disco.")
         case .preferencesFailed:
             String(localized: "Tente novamente.")
+        case .gammaFailed:
+            String(localized: "Aguarde o monitor terminar de reconfigurar e tente de novo.")
         }
     }
 }

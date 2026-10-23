@@ -141,6 +141,16 @@
         }
       }
     },
+    "Aguarde o monitor terminar de reconfigurar e tente de novo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wait for the display to finish reconfiguring and try again."
+          }
+        }
+      }
+    },
     "Ajustes": {
       "localizations": {
         "en": {
@@ -201,12 +211,32 @@
         }
       }
     },
+    "Aplicar em": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply to"
+          }
+        }
+      }
+    },
     "Aprovar em Ajustes do Sistema…": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Approve in System Settings…"
+          }
+        }
+      }
+    },
+    "Aquece o branco da tela ajustando a curva de cor do monitor. Vale enquanto o LiteDisplay estiver aberto.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warms the screen’s white point by adjusting the display’s colour curve. Active while LiteDisplay is open."
           }
         }
       }
@@ -221,12 +251,32 @@
         }
       }
     },
+    "Ativo agora": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active now"
+          }
+        }
+      }
+    },
     "Atual": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Current"
+          }
+        }
+      }
+    },
+    "Até": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Until"
           }
         }
       }
@@ -281,6 +331,16 @@
         }
       }
     },
+    "Conforto visual": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eye comfort"
+          }
+        }
+      }
+    },
     "Cor": {
       "localizations": {
         "en": {
@@ -311,12 +371,42 @@
         }
       }
     },
+    "Das": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From"
+          }
+        }
+      }
+    },
+    "Deixe desligado para valer o dia todo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave it off to apply all day."
+          }
+        }
+      }
+    },
     "Desenha em 2x e reduz para o painel usando um modo HiDPI do próprio monitor. Mantém a taxa de atualização.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Renders at 2x and scales down to the panel using one of the display’s own HiDPI modes. Keeps the refresh rate."
+          }
+        }
+      }
+    },
+    "Desligado": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
           }
         }
       }
@@ -481,6 +571,16 @@
         }
       }
     },
+    "Forte, para a noite": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strong, for the night"
+          }
+        }
+      }
+    },
     "Guarde combinações de nitidez, tamanho e taxa e aplique com um clique, aqui ou pelo menu.": {
       "localizations": {
         "en": {
@@ -521,12 +621,32 @@
         }
       }
     },
+    "Horário": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        }
+      }
+    },
     "Hz": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Hz"
+          }
+        }
+      }
+    },
+    "Inativo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inactive"
           }
         }
       }
@@ -547,6 +667,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Install the HiDPI profile below to unlock this mode."
+          }
+        }
+      }
+    },
+    "Intensidade": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intensity"
           }
         }
       }
@@ -601,6 +731,16 @@
         }
       }
     },
+    "Mais quente": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warmer"
+          }
+        }
+      }
+    },
     "Mantém a taxa de atualização. Pede a senha de administrador e reconectar o monitor.": {
       "localizations": {
         "en": {
@@ -627,6 +767,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Check “Apply on connect” so LiteDisplay restores everything by itself."
+          }
+        }
+      }
+    },
+    "Menos luz azul à noite ou o dia todo, sem mexer no brilho.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less blue light at night or all day, without touching brightness."
           }
         }
       }
@@ -681,6 +831,16 @@
         }
       }
     },
+    "Médio, confortável para longas sessões": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium, comfortable for long sessions"
+          }
+        }
+      }
+    },
     "Método: %@": {
       "localizations": {
         "en": {
@@ -717,6 +877,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "No profiles yet"
+          }
+        }
+      }
+    },
+    "Neutro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutral"
           }
         }
       }
@@ -821,12 +991,32 @@
         }
       }
     },
+    "O ajuste é desfeito ao sair do app e refeito ao reconectar o monitor ou acordar o Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The adjustment is undone when the app quits and redone when the display reconnects or the Mac wakes."
+          }
+        }
+      }
+    },
     "O identificador do monitor é inválido.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "The display identifier is invalid."
+          }
+        }
+      }
+    },
+    "O intervalo pode atravessar a meia-noite, como 18:00 até 07:00.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The window may cross midnight, such as 18:00 to 07:00."
           }
         }
       }
@@ -857,6 +1047,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "macOS refused the mode change (%1$@, code %2$d)."
+          }
+        }
+      }
+    },
+    "O macOS recusou o ajuste de cor da tela (código %d).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS refused the display colour adjustment (code %d)."
           }
         }
       }
@@ -927,6 +1127,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Panel %@"
+          }
+        }
+      }
+    },
+    "Para valer sempre, ative “Iniciar no login” em Ajustes.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To keep it always on, enable “Open at login” in Settings."
           }
         }
       }
@@ -1011,6 +1221,16 @@
         }
       }
     },
+    "Quase neutro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almost neutral"
+          }
+        }
+      }
+    },
     "Reabra o LiteDisplay para removê-la.": {
       "localizations": {
         "en": {
@@ -1057,6 +1277,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reconnect the cable and try again."
+          }
+        }
+      }
+    },
+    "Reduzir luz azul": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reduce blue light"
           }
         }
       }
@@ -1151,6 +1381,16 @@
         }
       }
     },
+    "Suave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mild"
+          }
+        }
+      }
+    },
     "Suavização de fontes mais forte": {
       "localizations": {
         "en": {
@@ -1167,6 +1407,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "HiDPI only"
+          }
+        }
+      }
+    },
+    "Só em um horário": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only at set hours"
+          }
+        }
+      }
+    },
+    "Só monitores externos": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "External displays only"
           }
         }
       }
@@ -1241,6 +1501,36 @@
         }
       }
     },
+    "Tela virtual desligada. O LiteDisplay vai reabrir em instantes para liberá-la.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Virtual display turned off. LiteDisplay will reopen in a moment to release it."
+          }
+        }
+      }
+    },
+    "Telas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Displays"
+          }
+        }
+      }
+    },
+    "Temperatura de cor do branco.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colour temperature of the white point."
+          }
+        }
+      }
+    },
     "Tente novamente ou use o modo HiDPI nativo.": {
       "localizations": {
         "en": {
@@ -1307,6 +1597,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Text, startup and behaviour when displays connect."
+          }
+        }
+      }
+    },
+    "Todas as telas": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All displays"
           }
         }
       }

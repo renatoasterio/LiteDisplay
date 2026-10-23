@@ -29,9 +29,9 @@ Finder metadata on new bundles and breaks `codesign`. Never pass `-derivedDataPa
   modes are `DisplayMode` values. The pure rules (`ModeSelection`, `HiDPIOverrideProfile`) are unit-tested.
 - `LiteDisplay/Infrastructure` — one folder per system area: `CoreGraphics` (enumeration, mode transactions,
   reconfiguration callbacks), `VirtualDisplay` (private `CGVirtualDisplay` API), `Override` (privileged install),
-  `System` (font smoothing, login item, sleep/wake), `Storage` (settings, profiles).
+  `System` (font smoothing, login item, sleep/wake, display gamma for the blue light filter), `Storage` (settings, profiles).
 - `LiteDisplay/Features` — SwiftUI views + `@MainActor @Observable` view models per feature (`MainWindow`,
-  `Monitors`, `Profiles`, `Settings`, `MenuBar`). View models depend on Domain protocols only.
+  `Monitors`, `Profiles`, `Comfort`, `Settings`, `MenuBar`). View models depend on Domain protocols only.
 - `LiteDisplay/Shared` — design tokens, glass surfaces, cards, chips, badges, button styles, extensions.
 - `LiteDisplay/App` — entry point, `AppDelegate`, `AppContainer` (composition root), `Log`.
 - Dependencies point downwards only: Features → Domain ← Infrastructure. Tests replace Infrastructure with
@@ -67,7 +67,9 @@ Finder metadata on new bundles and breaks `codesign`. Never pass `-derivedDataPa
     (Brazil) text as the key and an English translation in `Resources/Localizable.xcstrings`.
 11. **UI**: Apple HIG, vibrant brand palette from `DesignTokens`, Liquid Glass via `glassSurface` (material fallback on
     macOS 15), system fonts, SF Symbols, accessibility labels on every control.
-12. **Tests**: Swift Testing for Domain, use cases, stores and view models using `LiteDisplayTests/Fakes`.
+12. **Gamma**: only `Infrastructure/System/DisplayGammaService.swift` touches gamma tables; it caches each display's
+    table before the first change, scales that cache, and `shutdown()` restores every display at exit.
+13. **Tests**: Swift Testing for Domain, use cases, stores and view models using `LiteDisplayTests/Fakes`.
     Infrastructure is verified manually (docs/ARCHITECTURE.md → Verification).
 
 ## Style

@@ -12,8 +12,9 @@ não-Retina: o resultado é texto serrilhado. O LiteDisplay resolve isso de trê
 | **Tela virtual** | Cria uma tela virtual 2x (ex.: 3840×2160) e espelha o monitor nela: redução exata 2:1, o texto mais nítido possível. Desfeito ao sair do app. | Para comparar, ou quando o perfil não é possível. |
 
 Mais: tamanhos de interface curados (Padrão, Maior, Muito maior, Enorme), taxa de atualização, tabela completa de
-modos, **perfis** aplicáveis em um clique (pela janela ou pelo menu) com "aplicar ao conectar", suavização de
-fontes mais forte, iniciar no login, restauração automática ao reconectar. Interface em português (Brasil) e inglês.
+modos, **perfis** aplicáveis em um clique (pela janela ou pelo menu) com "aplicar ao conectar", **conforto visual**
+(redução de luz azul por temperatura de cor, por monitor ou em todas as telas, com horário), suavização de fontes
+mais forte, iniciar no login, restauração automática ao reconectar. Interface em português (Brasil) e inglês.
 
 ## Requisitos
 

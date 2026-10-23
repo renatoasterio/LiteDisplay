@@ -277,6 +277,23 @@ Right:
 // DisplayModeService: CGConfigureDisplayWithDisplayMode only. VirtualDisplayService: that plus CGConfigureDisplayMirrorOfDisplay(config, physical, virtualID | 0).
 ```
 
+## 15. **Blue light filtering scales each display's own gamma table, only in `DisplayGammaService`, and is restored at exit**
+
+`DisplayGammaService` reads a display's table once with `CGGetDisplayTransferByTable` before the first change, caches it by display id, and applies `ChannelGains` by multiplying that cached table (`CGSetDisplayTransferByTable`), so repeated applies never compound. `restore()` calls `CGDisplayRestoreColorSyncSettings()`; `AppContainer.shutdown()` restores before exit. Cached tables are pruned for offline ids because the window server reuses display ids. The window server resets gamma on mode changes and on wake, so `ComfortViewModel.reapply()` runs after every `MonitorsViewModel.refresh()`. Night Shift's private `CBBlueLightClient` is not used.
+
+Grep: `CGSetDisplayTransferBy|CGGetDisplayTransferByTable|CGDisplayRestoreColorSyncSettings` (expect `DisplayGammaService.swift` only); `CGSetDisplayTransferByFormula` (expect none: it discards the profile's curve).
+
+Wrong:
+```swift
+CGSetDisplayTransferByFormula(id, 0, 1, 1, 0, 1, 1, 0, 0.7, 1)   // replaces the calibrated curve with gamma 1.0
+```
+Right:
+```swift
+let calibration = try calibration(for: id)                     // cached original table
+var blue = calibration.blue.map { $0 * CGGammaValue(gains.blue) }
+CGSetDisplayTransferByTable(id, UInt32(blue.count), &red, &green, &blue)
+```
+
 ## Severity guide
 
 | Severity | Classify here when… | Typical findings from this file |

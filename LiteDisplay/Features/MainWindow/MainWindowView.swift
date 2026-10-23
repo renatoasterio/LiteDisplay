@@ -8,6 +8,7 @@ import SwiftUI
 enum SidebarItem: Hashable {
     case display(UInt32)
     case profiles
+    case comfort
     case settings
 }
 
@@ -41,6 +42,8 @@ struct MainWindowView: View {
             }
         case .profiles?:
             ProfilesView()
+        case .comfort?:
+            ComfortView()
         case .settings?:
             SettingsView()
         case nil:
@@ -52,7 +55,7 @@ struct MainWindowView: View {
         switch selection {
         case let .display(id)? where displays.contains(where: { $0.id == id }):
             return
-        case .profiles?, .settings?:
+        case .profiles?, .comfort?, .settings?:
             return
         default:
             selection = displays.first.map { .display($0.id) }

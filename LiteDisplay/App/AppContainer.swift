@@ -14,9 +14,11 @@ final class AppContainer {
     let profileStore: ProfileStore
     let displays: any DisplayProviding
     let virtualDisplays: any VirtualDisplayControlling
+    let colorTemperature: any ColorTemperatureControlling
 
     let monitors: MonitorsViewModel
     let profiles: ProfilesViewModel
+    let comfort: ComfortViewModel
     let preferences: SettingsViewModel
 
     @ObservationIgnored private var sleepWake: SleepWakeObserver?
@@ -30,12 +32,14 @@ final class AppContainer {
         modes: any DisplayModeApplying,
         overrideInstaller: any OverrideInstalling,
         fontSmoothing: any FontSmoothingControlling,
-        loginItem: any LoginItemControlling
+        loginItem: any LoginItemControlling,
+        colorTemperature: any ColorTemperatureControlling
     ) {
         self.settings = settings
         self.profileStore = profileStore
         self.displays = displays
         self.virtualDisplays = virtualDisplays
+        self.colorTemperature = colorTemperature
 
         let sharpness = SetSharpnessUseCase(displays: displays, modes: modes, virtualDisplays: virtualDisplays, settings: settings)
         let resolution = ChangeResolutionUseCase(sharpness: sharpness)
@@ -55,8 +59,19 @@ final class AppContainer {
             applyProfile: ApplyProfileUseCase(displays: displays, sharpness: sharpness)
         )
         preferences = SettingsViewModel(fontSmoothing: fontSmoothing, loginItem: loginItem, settings: settings)
+        comfort = ComfortViewModel(
+            settings: settings,
+            applyFilter: ApplyBlueLightUseCase(
+                displays: displays,
+                virtualDisplays: virtualDisplays,
+                colorTemperature: colorTemperature,
+                settings: settings
+            )
+        )
         profiles.displaysDidChange = { [weak self] in self?.monitors.refresh() }
         monitors.relaunchHandler = { [weak self] in self?.relaunch() }
+        // Mode changes and wake reset gamma tables; every enumeration re-applies the filter.
+        monitors.displaysDidRefresh = { [weak self] in self?.comfort.reapply() }
     }
 
     /// The production wiring.
@@ -70,7 +85,8 @@ final class AppContainer {
             modes: DisplayModeService(),
             overrideInstaller: HiDPIOverrideInstaller(runner: PrivilegedRunner()),
             fontSmoothing: FontSmoothingService(),
-            loginItem: LaunchAtLoginService()
+            loginItem: LaunchAtLoginService(),
+            colorTemperature: DisplayGammaService()
         )
     }
 
@@ -78,6 +94,7 @@ final class AppContainer {
         monitors.start()
         profiles.reload()
         preferences.refresh()
+        comfort.start()
         sleepWake = SleepWakeObserver(
             onSleep: { [weak self] in self?.suspendVirtualDisplays() },
             onWake: { [weak self] in self?.resumeVirtualDisplays() }
@@ -87,9 +104,11 @@ final class AppContainer {
     /// Synchronous on purpose: it runs inside `applicationShouldTerminate`, where awaiting a main-actor reply deadlocks.
     func shutdown() {
         monitors.stop()
+        comfort.stop()
         sleepWake?.stop()
         wakeTask?.cancel()
         virtualDisplays.releaseAll()
+        colorTemperature.restore()
     }
 
     /// Starts a fresh instance and quits this one (the way out of a lingering virtual display).

@@ -5,7 +5,7 @@
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
 │ Features (SwiftUI views, @MainActor @Observable view models)          │
-│   MainWindow · Monitors · Profiles · Settings · MenuBar               │
+│   MainWindow · Monitors · Profiles · Comfort · Settings · MenuBar     │
 ├──────────────────────────────────────────────────────────────────────┤
 │ Infrastructure                                                        │
 │   CoreGraphics · VirtualDisplay · Override · System · Storage         │
@@ -21,7 +21,8 @@
   `PrivilegedExecuting`, `FontSmoothingControlling`, `LoginItemControlling`, `SettingsStoring`, `ProfileStoring`).
   `ModeSelection` holds the pure rules (native mode, HiDPI candidates, curated ladder, refresh rates). Use cases
   compose protocols: `SetSharpnessUseCase` (standard / HiDPI / virtual), `ChangeResolutionUseCase`,
-  `ApplyProfileUseCase`, `SaveProfileUseCase`, `ReapplyOnConnectUseCase`, `EnableHiDPIOverrideUseCase`.
+  `ApplyProfileUseCase`, `SaveProfileUseCase`, `ReapplyOnConnectUseCase`, `EnableHiDPIOverrideUseCase`,
+  `ApplyBlueLightUseCase` (colour-temperature gains from `ColorTemperature`, schedule from `BlueLightSettings`).
 - **Infrastructure** implements the protocols, one folder per system area so framework quirks stay contained.
 - **Features** are vertical slices. A view model receives protocols/use cases in its initializer and exposes
   observable state; views never talk to Infrastructure.
@@ -35,6 +36,7 @@
 | `standard` | `DisplayModeService.apply` with the panel's native 1x mode (`kDisplayModeNativeFlag`). | `.permanently` |
 | `hiDPI` | The best HiDPI mode from `ModeSelection` (exact 2:1 when offered, else the largest HiDPI size below native, e.g. 1904×1071 on a 1080p panel with an override). | `.permanently` |
 | `virtualDisplay` | `VirtualDisplayService` creates a `CGVirtualDisplay` (private API, `hiDPI = 1`, `maxPixels` = 2× the panel, modes listed in **points** at the panel's native size so the window server derives the 2x variant as the default, same refresh rate with a 60 Hz fallback), waits for it to come online, selects its 2x mode only if needed and mirrors the panel onto it with `CGConfigureDisplayMirrorOfDisplay`. | `.forSession`. Turning it off unmirrors and gives the panel the main role back, but the window server only drops a virtual display that took part in a configuration when its process exits, so the app relaunches itself (≈2 s) to free it. Sleep unmirrors and wake re-mirrors the same virtual display. |
+| Blue light | `DisplayGammaService` caches each display's gamma table once and scales it by `ChannelGains` (`CGSetDisplayTransferByTable`); `ComfortViewModel` re-applies after every display enumeration, on wake and every minute for the schedule; `shutdown()` restores. | Process lifetime; restored at exit |
 | Override | `HiDPIOverrideProfile` generates the one-key-hidpi byte layout (8-byte 1x entries, 16-byte 2x entries with `0x00000009 0x00200000`), `HiDPIOverrideInstaller` stages it in a 0700 temp dir and `PrivilegedRunner` copies it as root; the file is read back and compared byte-for-byte. | Until the file is removed; takes effect on reconnect |
 
 `DisplaySnapshot.hasUsableHiDPI` uses the panel's physical size (≥ 60 points per inch) so Apple's stock 960×540@2x on a

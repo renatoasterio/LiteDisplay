@@ -216,6 +216,13 @@ custom_rules:
     message: "Global preference writes are limited to FontSmoothingService."
     severity: error
 
+  no_gamma_outside_service:
+    name: "Gamma tables only in DisplayGammaService"
+    excluded: "LiteDisplay/Infrastructure/System/DisplayGammaService\\.swift"
+    regex: '\b(CGSetDisplayTransferBy(Table|Formula|ByteTable)|CGGetDisplayTransferByTable|CGDisplayRestoreColorSyncSettings)\b'
+    message: "Only DisplayGammaService may change display gamma, so calibration is cached once and restored at exit."
+    severity: error
+
   no_frameworks_in_domain:
     name: "Domain is framework-free"
     included: "LiteDisplay/Domain/.*\\.swift"

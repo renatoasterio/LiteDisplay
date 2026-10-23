@@ -24,6 +24,8 @@ enum DebugAutomation {
         let then: SharpnessMethod?
         let thenAfter: Double
         let quitAfter: Double?
+        /// "off" or a kelvin value: sets the blue light filter before the display actions.
+        let blueLight: String?
     }
 
     static func request(from arguments: [String] = CommandLine.arguments) -> Request? {
@@ -35,12 +37,32 @@ enum DebugAutomation {
         }
         let rate = value(for: "--litedisplay-rate", in: arguments).flatMap(Double.init)
         let quitAfter = value(for: "--litedisplay-quit-after", in: arguments).flatMap(Double.init)
+        let blueLight = value(for: "--litedisplay-bluelight", in: arguments)
         let then = value(for: "--litedisplay-then", in: arguments).flatMap(SharpnessMethod.init(rawValue:))
         let thenAfter = value(for: "--litedisplay-then-after", in: arguments).flatMap(Double.init) ?? 10
-        return Request(method: method, size: size, refreshRate: rate, then: then, thenAfter: thenAfter, quitAfter: quitAfter)
+        return Request(
+            method: method,
+            size: size,
+            refreshRate: rate,
+            then: then,
+            thenAfter: thenAfter,
+            quitAfter: quitAfter,
+            blueLight: blueLight
+        )
     }
 
     static func run(_ request: Request, container: AppContainer) async {
+        if let blueLight = request.blueLight {
+            if let kelvin = Double(blueLight) {
+                container.comfort.kelvin = kelvin
+                container.comfort.isEnabled = true
+            } else {
+                container.comfort.isEnabled = false
+            }
+            try? await Task.sleep(for: .milliseconds(300))
+            let comfort = container.comfort
+            report("blue light: enabled=\(comfort.isEnabled) active=\(comfort.isActiveNow) \(comfort.kelvinLabel)")
+        }
         container.monitors.refresh()
         guard let display = container.monitors.displays.first else {
             report("no external display")
@@ -48,8 +70,12 @@ enum DebugAutomation {
         }
         report("before: \(display.name) \(display.currentMode?.summary ?? "-") method=\(display.activeMethod.rawValue)")
         if request.size != nil || request.refreshRate != nil {
-            if let size = request.size {
-                await container.monitors.setSize(size, for: display)
+            // Size and rate keep the active method, as the UI does, so switch methods first when they differ.
+            if display.activeMethod != request.method {
+                await container.monitors.setMethod(request.method, for: display)
+            }
+            if let size = request.size, let refreshed = container.monitors.display(withID: display.id) {
+                await container.monitors.setSize(size, for: refreshed)
             }
             if let rate = request.refreshRate, let refreshed = container.monitors.display(withID: display.id) {
                 await container.monitors.setRefreshRate(rate, for: refreshed)

@@ -23,6 +23,8 @@ struct SidebarView: View {
             Section("LiteDisplay") {
                 Label("Perfis", systemImage: "rectangle.stack")
                     .tag(SidebarItem.profiles)
+                Label("Conforto visual", systemImage: "sun.haze")
+                    .tag(SidebarItem.comfort)
                 Label("Ajustes", systemImage: "slider.horizontal.3")
                     .tag(SidebarItem.settings)
             }

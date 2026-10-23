@@ -205,6 +205,8 @@ file_requires "CGDisplayCopyAllDisplayModes in a file without kCGDisplayShowDupl
 # shellcheck disable=SC2086
 scan "Display APIs the app must never call (layout, capture, fade, restore-all)" '\b(CGDisplayCapture|CGDisplayRelease|CGDisplayFade|CGAcquireDisplayFadeReservation|CGRestorePermanentDisplayConfiguration|CGConfigureDisplayStereoOperation)\b' $APP_FILES
 [[ -n "$NON_VIRTUAL" ]] && scan "CGConfigureDisplayOrigin outside VirtualDisplayService (only the mirror source and the unmirrored panel may take the origin)" '\bCGConfigureDisplayOrigin\b' $NON_VIRTUAL
+NON_GAMMA=$(echo "$APP_FILES" | grep -v "Infrastructure/System/DisplayGammaService.swift" || true)
+[[ -n "$NON_GAMMA" ]] && scan "Gamma table calls outside DisplayGammaService (calibration must be cached once and restored at exit)" '\b(CGSetDisplayTransferBy|CGGetDisplayTransferByTable|CGDisplayRestoreColorSyncSettings)' $NON_GAMMA
 # shellcheck disable=SC2086
 scan "Physical mode committed .forSession / .forAppOnly (must be .permanently; only virtual mirrors are .forSession)" 'CGCompleteDisplayConfiguration\([^)]*\.(forAppOnly)\)' $APP_FILES
 # shellcheck disable=SC2086

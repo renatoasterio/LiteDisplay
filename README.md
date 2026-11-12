@@ -77,9 +77,27 @@ flowchart LR
 
 ## Install
 
-**Requirements:** macOS 15 or later, an Apple Silicon Mac, and Xcode (the project is generated for Xcode 26).
+**Requirements:** macOS 15 or later and an Apple Silicon Mac.
 
-There are no prebuilt downloads yet, so LiteDisplay is built from source. It takes about a minute:
+### Download
+
+1. Download `LiteDisplay-<version>.zip` from the
+   **[latest release](https://github.com/renatoasterio/LiteDisplay/releases/latest)** and unzip it.
+2. Move `LiteDisplay.app` to `/Applications`.
+3. Open it. LiteDisplay is ad-hoc signed and not notarized, so macOS blocks the first launch: go to
+   **System Settings › Privacy & Security**, scroll to the message about LiteDisplay and click **Open Anyway**.
+
+If you prefer the terminal, removing the quarantine flag has the same effect:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/LiteDisplay.app
+```
+
+Each release lists the SHA-256 of its archive so you can check the download with `shasum -a 256`.
+
+### Build from source
+
+Needs Xcode (the project is generated for Xcode 26). It takes about a minute:
 
 ```bash
 brew install xcodegen swiftlint swiftformat
@@ -95,9 +113,6 @@ make install
 
 `make install` builds the app and copies it to `/Applications`, a stable path that "Open at login" needs.
 Use `make run` instead to build and launch without installing.
-
-The app is ad-hoc signed and not notarized. If macOS blocks the first launch, right-click the app and choose
-**Open**, or allow it in **System Settings › Privacy & Security**.
 
 ## Quick start
 

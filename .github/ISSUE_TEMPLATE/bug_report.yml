@@ -1,0 +1,65 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. English or Portuguese are both fine.
+        For security problems, do not open an issue: see SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected and what happened instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: method
+    attributes:
+      label: Sharpness method in use
+      options:
+        - Native HiDPI
+        - HiDPI profile installation
+        - Virtual display
+        - Standard (1x)
+        - Not related to a method
+    validations:
+      required: true
+  - type: input
+    id: monitor
+    attributes:
+      label: Monitor
+      description: Brand, model, resolution and refresh rate.
+      placeholder: "Acer Predator XB273 GX, 1920×1080, 240 Hz"
+    validations:
+      required: true
+  - type: input
+    id: connection
+    attributes:
+      label: Connection
+      placeholder: "USB-C to DisplayPort, HDMI, dock…"
+  - type: input
+    id: mac
+    attributes:
+      label: Mac and macOS version
+      placeholder: "MacBook Pro M2 Pro, macOS 15.4"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: LiteDisplay version or commit
+      description: Shown at the bottom of the sidebar.
+      placeholder: "0.1.0 (1)"
+  - type: textarea
+    id: modes
+    attributes:
+      label: Output of `make modes`
+      description: Run it in the repository folder and paste the result. It lists your displays and their modes.
+      render: text
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Error banner text, screenshots, steps to reproduce.

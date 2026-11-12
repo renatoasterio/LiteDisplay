@@ -1,0 +1,70 @@
+name: Compatibility report
+description: Tell us how LiteDisplay behaves on your monitor (working or not)
+title: "[Compatibility] "
+labels: [compatibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every report helps the next person know what to expect, and feeds the "Tested hardware" table in the README.
+        English or Portuguese are both fine.
+  - type: input
+    id: monitor
+    attributes:
+      label: Monitor
+      description: Brand and model.
+      placeholder: "Acer Predator XB273 GX"
+    validations:
+      required: true
+  - type: input
+    id: panel
+    attributes:
+      label: Panel
+      description: Size, resolution and maximum refresh rate.
+      placeholder: "27″, 1920×1080, 240 Hz"
+    validations:
+      required: true
+  - type: input
+    id: mac
+    attributes:
+      label: Mac and macOS version
+      placeholder: "MacBook Pro M2 Pro, macOS 15.4"
+    validations:
+      required: true
+  - type: input
+    id: connection
+    attributes:
+      label: Connection
+      placeholder: "USB-C to DisplayPort, HDMI, dock…"
+  - type: dropdown
+    id: native
+    attributes:
+      label: Native HiDPI
+      options:
+        - Works
+        - Works after installing the HiDPI profile
+        - Does not work
+        - Not tried
+    validations:
+      required: true
+  - type: dropdown
+    id: virtual
+    attributes:
+      label: Virtual display
+      options:
+        - Works
+        - Does not work
+        - Not tried
+    validations:
+      required: true
+  - type: input
+    id: mode
+    attributes:
+      label: Best mode you got
+      description: Size and refresh rate.
+      placeholder: "1904×1071 HiDPI @ 240 Hz"
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes and screenshots
+      description: How the text looks, anything surprising, the output of `make modes` if something failed.
